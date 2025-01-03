@@ -3,7 +3,16 @@ services:
     name: gutenberg-api
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn gutenberg-assignment.models:app
+    startCommand: gunicorn models:app
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.16 
+        value: 3.9.16
+      - key: FLASK_APP
+        value: models.py
+    databases:
+      - name: gutenberg-db
+
+databases:
+  - name: gutenberg-db
+    databaseName: gutenberg
+    user: gutenberg_user 
