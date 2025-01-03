@@ -1,16 +1,30 @@
+import os
 from flask import Flask, jsonify, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
-#Database connection parameters
-db_config = {
-    "host" : "127.0.0.1",
-    "database" : "gutenberg",
-    "user" : "nishigandha05",
-    "password": 'nishi7456',
-}
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    url = urlparse(DATABASE_URL)
+    db_config = {
+        'dbname': url.path[1:],
+        'user': url.username,
+        'password': url.password,
+        'host': url.hostname,
+        'port': url.port or 5432
+    }
+else:
+    # Your local database config
+    db_config = {
+        "host" : "127.0.0.1",
+        "database" : "gutenberg",
+        "user" : "nishigandha05",
+        "password": 'nishi7456',
+    }
 
 #Function to retrieve data from database
 def get_books_from_db(page=1, per_page=25, book_ids=None, languages=None, mime_types=None, 
